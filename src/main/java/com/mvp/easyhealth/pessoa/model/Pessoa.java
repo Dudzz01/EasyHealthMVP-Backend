@@ -1,12 +1,16 @@
 package com.mvp.easyhealth.pessoa.model;
 
+import java.time.Instant;
 import java.util.Objects;
+
+import com.mvp.easyhealth.pessoa.dto.PessoaDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,6 +23,7 @@ public class Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pessoa_sequence")
 	@SequenceGenerator(name = "pessoa_sequence", sequenceName = "pessoa_id_seq", allocationSize = 50)
+	@Column(name = "ID")
 	private Long id;
 	
 	@Column(name = "NOME", nullable = false, length = 300)
@@ -34,6 +39,10 @@ public class Pessoa {
 	@Column(name = "SENHA", nullable = true, length = 25)
 	private String senha; //A V1 DO MVP NÃO TERÁ LOGIN. LOGO NÃO ESTÁ SENDO UTILIZADO NO MOMENTO
 	
+	@Column(name = "CRIADO_EM", nullable = false)
+	private Instant criadoEm;
+	
+
 	public Long getId() {
 		return id;
 	}
@@ -64,6 +73,29 @@ public class Pessoa {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public Instant getCriadoEm() {
+		return criadoEm;
+	}
+
+	public void setCriadoEm(Instant criadoEm) {
+		this.criadoEm = criadoEm;
+	}
+	
+	@PrePersist
+	private void onPersist()
+	{
+		this.criadoEm = Instant.now();
+	}
+	
+	public PessoaDTO toPessoaDto()
+	{
+		PessoaDTO pessoaDTO = new PessoaDTO();
+		pessoaDTO.setId(this.id);
+		pessoaDTO.setNome(this.nome);
+		pessoaDTO.setEmail(this.email);
+		return pessoaDTO;
 	}
 	
 	@Override
