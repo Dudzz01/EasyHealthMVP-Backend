@@ -25,7 +25,7 @@ public class PessoaService {
 	public PessoaDTO criar(PessoaDTO pessoaDto)
 	{
 		pessoaDto.setId(null);
-		pessoaDto.setSenha(null); //temporariamente pois n tem login no sistema
+		
 		
 		Pessoa pessoa = pessoaDto.toPessoa();
 		pessoa = pessoaRepository.save(pessoa);
